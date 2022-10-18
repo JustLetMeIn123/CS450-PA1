@@ -17,7 +17,7 @@ syscall_handler (struct intr_frame *f UNUSED)
 {
 
   printf ("system call!\n");
-  int call;
+  int call = f->esp;
   switch (call) {
     case SYS_EXIT:
        set_process_exitcode(thread_current()->tid, call);

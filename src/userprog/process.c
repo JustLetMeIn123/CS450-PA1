@@ -42,6 +42,13 @@ process_execute (const char *file_name)
   tid = thread_create (file_name, PRI_DEFAULT, start_process, fn_copy);
   if (tid == TID_ERROR)
     palloc_free_page (fn_copy); 
+  else {
+    char *fn_copy_2 = palloc_get_page(0);
+    strlcpy (fn_copy_2, file_name, PGSIZE);
+    char *token = strtok (fn_copy_2, " ");
+    add_process_to_list(token, tid);
+    palloc_free_page(fn_copy_2);
+  }
   return tid;
 }
 
@@ -88,6 +95,7 @@ start_process (void *file_name_)
 int
 process_wait (tid_t child_tid UNUSED) 
 {
+  struct process_info *p_info = get_process_info(child_tid);
   return -1;
 }
 
