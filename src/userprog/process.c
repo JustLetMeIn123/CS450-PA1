@@ -95,8 +95,11 @@ start_process (void *file_name_)
 int
 process_wait (tid_t child_tid UNUSED) 
 {
-  struct process_info *p_info = get_process_info(child_tid);
-  return -1;
+  // struct process_info *p_info = get_process_info(child_tid);
+  // return -1;
+  while(1) {
+    
+  }
 }
 
 /* Free the current process's resources. */
