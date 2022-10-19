@@ -4,6 +4,7 @@
 #include "threads/interrupt.h"
 #include "threads/thread.h"
 
+
 static void syscall_handler (struct intr_frame *);
 
 void
@@ -12,10 +13,31 @@ syscall_init (void)
   intr_register_int (0x30, 3, INTR_ON, syscall_handler, "syscall");
 }
 
+
+struct process_info* get_process_info(tid_t pid) {
+  struct list_elem *e;
+
+  struct process_info* pi = NULL;
+  lock_acquire(&pil_lock);
+  for (e = list_begin (&process_info_list); e != list_end (&process_info_list);
+       e = list_next (e))
+  {
+      struct process_info *p = list_entry (e, struct process_info, elem);
+      if (p->pid == pid) {
+        pi = p;
+        break;
+      }
+  }
+
+  lock_release(&pil_lock);
+
+  return pi;
+}
+
 static void
 syscall_handler (struct intr_frame *f UNUSED) 
 {
-
+  
   printf ("system call!\n");
   int call = f->esp;
   switch (call) {
